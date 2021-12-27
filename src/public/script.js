@@ -60,9 +60,9 @@ ref.importBtn.addEventListener('click', () => {
     ref.importInput.click();
     ref.importInput.addEventListener('change', async(e) => {
         const file = e.path[0].files[0];
-        const data = await getBase64(file)
+        const data = await getBase64(file);
         const res = await axios.post(`${api}/config`, {data: JSON.parse(data)});
-        passwordArr = res.data
+        updateData(res.data);
         updatePassword();
     })
 })
@@ -76,14 +76,14 @@ ref.panel.addEventListener('click', (e) => {
                 active.classList.add('active-search');
                 for(let panelEl of ref.panelItems) {
                     if(el.getAttribute('link') === panelEl.getAttribute('link')) {
-                        panelEl.classList.remove('none')
+                        panelEl.classList.remove('none');
                     }else {
-                        panelEl.classList.add('none')
+                        panelEl.classList.add('none');
                     }
                 }
             }else {
                 el.setAttribute('active', 'false');
-                el.classList.remove('active-search')
+                el.classList.remove('active-search');
             }
         }
     }
@@ -119,7 +119,7 @@ function updatePassword() {
                 elem.querySelector('.password-elem input').value = res.data.passwordView;
             } else {
                 elem.querySelector('.password-elem input').type = 'password';
-                elem.querySelector('.password-elem input').value = '********'
+                elem.querySelector('.password-elem input').value = '********';
             }
         })
         elem.querySelector('.view-additional').addEventListener('click', async() => {
@@ -157,11 +157,11 @@ function getBase64(file) {
     var reader = new FileReader();
     reader.readAsText(file);
     reader.onerror = function (error) {
-        console.log('[base64] error')
+        console.log('[base64] error');
     };
     return new Promise(res => {
         reader.onload = () => {
-            res(reader.result)
+            res(reader.result);
         }
     });
 }
