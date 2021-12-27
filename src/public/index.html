@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Пароли</title>
+    <link rel="stylesheet" href="normalize.css">
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>Ваш менеджер поролей</h1>
+    </header>
+
+    <main>
+
+        <section class="password-action">
+            <button class="expor-encrypt">
+              <a href="../passwords.encrypt.json" download="config" style="color: white;">Экспорт паролей</a>
+            </button>
+            <button class="export-decrypt">
+                Скачать разшифрованные пароли
+            </button>
+            <div>
+                <input class="import" type="file" accept=".json">
+                <button class="importBtn">Загрузить конфиг</button>
+            </div>
+            <a href="void 0" download="passwords" class="export-decrypt-dowload"></a>
+        </section>
+
+        <section>
+            <div class="panel">
+                <span link="search" active="true" class="active-search">Поиск</span>
+                <span link="create" active="false">Создать</span>
+            </div>
+            <div class="search panel-elem" link="search">
+                <input class="input-search" type="text" placeholder="Поиск">
+            </div>
+            <div class="password-create panel-elem none" link="create">
+                <div class="password-create">
+                    <input class="input-name" type="text" placeholder="Название">
+                    <input class="input-email" type="text" placeholder="Email/номер">
+                    <input class="input-password" type="text" placeholder="Пароль">
+                    <input class="input-additional" type="text" placeholder="Дополнительное">
+                </div>
+                <button class="save">Сохранить/Изменить</button>
+            </div>
+        </section>
+
+       
+
+        <section class="password-view">
+
+        </section>
+
+        <div class="password-item none test">
+            <div class="password-name flex">
+                Название: <span>sadasdasd</span>
+            </div>
+            <div class="password-email flex">
+                Почта или номер телефона: <span>sada@sdasd</span>
+            </div>
+            <div class="password-elem flex">
+                Пароль: <input value="********" type="password" disabled>
+            </div>
+            <div class="password-addition flex">
+                Дополнительно: <span show="false">********</span>
+            </div>
+            <div class="password-btn additional-view">
+                <div style="margin-right: 10px;">Посмотреть: </div>
+                <button class="view-password">Пароль</button>
+                <button class="view-additional">Дополнительное</button>
+            </div>
+            <div class="password-btn">
+                <button class="copy">Копировать пароль</button>
+                <button class="delete">Удалить</button>
+            </div>
+        </div>
+
+    </main>
+    <script src="./script.js"></script>
+</body>
+
+</html>
