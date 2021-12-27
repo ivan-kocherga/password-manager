@@ -5,6 +5,7 @@ const ref = {
     additionalInput: document.querySelector('.input-additional'),
     importInput: document.querySelector('.import'),
     searchInput: document.querySelector('.input-search'),
+    passwordInput: document.querySelector('.login input'),
 
     passwordEl: document.querySelector('.test'),
     passwordList: document.querySelector('.password-view'),
@@ -14,10 +15,12 @@ const ref = {
     panelItems: document.querySelectorAll('.panel-elem'),
     passwordBlock: document.querySelector('.password-create'), 
     searchBlock: document.querySelector('.search'),
+    passwordBlock: document.querySelector('.login'),
 
     exportDecryptBtn: document.querySelector('.export-decrypt'),
     saveBtn: document.querySelector('.save'),
     importBtn: document.querySelector('.importBtn'),
+    passworBtn: document.querySelector('.login button'),
 }
 
 const api = 'http://localhost:4523';
@@ -28,76 +31,86 @@ function updateData(data) {
     passwordArr = passwordArrSearch = data;
 }
 
-axios.get(`${api}/passwords`).then(res => {
-    updateData(res.data);
-    updatePassword();
-})
-
-ref.saveBtn.addEventListener('click', async() => {
-    const name = ref.nameInput.value;
-    const password = ref.passwordInput.value;
-    const mailOrPhone = ref.mailInput.value;
-    const additional = ref.additionalInput.value;
-    if (name && password && mailOrPhone) {
-        const res = await axios.post(`${api}/passwords`, { name, password, mailOrPhone, additional });
-        updateData(res.data);
-        updatePassword();
-        ref.nameInput.value = '';
+ref.passworBtn.addEventListener('click', async() => {
+    const res = await axios.get(`${api}/app/password/${ref.passwordInput.value}`);
+    if(res.data) {
+        ref.passwordBlock.classList.add('none');
         ref.passwordInput.value = '';
-        ref.mailInput.value = '';
-        ref.additionalInput.value = '';
+        axios.get(`${api}/passwords`).then(res => {
+            updateData(res.data);
+            updatePassword();
+            events();
+        })
     }
 })
 
-ref.exportDecryptBtn.addEventListener('click', () => {
-    axios.get(`${api}/passwords/decrypt`).then(res => {
-        ref.dowloadLink.href = res.data;
-        ref.dowloadLink.click();
+function events() {
+    ref.saveBtn.addEventListener('click', async() => {
+        const name = ref.nameInput.value;
+        const password = ref.passwordInput.value;
+        const mailOrPhone = ref.mailInput.value;
+        const additional = ref.additionalInput.value;
+        if (name && password && mailOrPhone) {
+            const res = await axios.post(`${api}/passwords`, { name, password, mailOrPhone, additional });
+            updateData(res.data);
+            updatePassword();
+            ref.nameInput.value = '';
+            ref.passwordInput.value = '';
+            ref.mailInput.value = '';
+            ref.additionalInput.value = '';
+        }
     })
-})
-
-ref.importBtn.addEventListener('click', () => {
-    ref.importInput.click();
-    ref.importInput.addEventListener('change', async(e) => {
-        const file = e.path[0].files[0];
-        const data = await getBase64(file);
-        const res = await axios.post(`${api}/config`, {data: JSON.parse(data)});
-        updateData(res.data);
-        updatePassword();
+    
+    ref.exportDecryptBtn.addEventListener('click', () => {
+        axios.get(`${api}/passwords/decrypt`).then(res => {
+            ref.dowloadLink.href = res.data;
+            ref.dowloadLink.click();
+        })
     })
-})
-
-ref.panel.addEventListener('click', (e) => {
-    if(e.path[0].getAttribute('active') === 'false') {
-        const active = e.path[0];
-        for(let el of ref.panelLink) {
-            if(el.getAttribute('link') === active.getAttribute('link')) {
-                active.setAttribute('active', 'true');
-                active.classList.add('active-search');
-                for(let panelEl of ref.panelItems) {
-                    if(el.getAttribute('link') === panelEl.getAttribute('link')) {
-                        panelEl.classList.remove('none');
-                    }else {
-                        panelEl.classList.add('none');
+    
+    ref.importBtn.addEventListener('click', () => {
+        ref.importInput.click();
+        ref.importInput.addEventListener('change', async(e) => {
+            const file = e.path[0].files[0];
+            const data = await getBase64(file);
+            const res = await axios.post(`${api}/config`, {data: JSON.parse(data)});
+            updateData(res.data);
+            updatePassword();
+        })
+    })
+    
+    ref.panel.addEventListener('click', (e) => {
+        if(e.path[0].getAttribute('active') === 'false') {
+            const active = e.path[0];
+            for(let el of ref.panelLink) {
+                if(el.getAttribute('link') === active.getAttribute('link')) {
+                    active.setAttribute('active', 'true');
+                    active.classList.add('active-search');
+                    for(let panelEl of ref.panelItems) {
+                        if(el.getAttribute('link') === panelEl.getAttribute('link')) {
+                            panelEl.classList.remove('none');
+                        }else {
+                            panelEl.classList.add('none');
+                        }
                     }
+                }else {
+                    el.setAttribute('active', 'false');
+                    el.classList.remove('active-search');
                 }
-            }else {
-                el.setAttribute('active', 'false');
-                el.classList.remove('active-search');
             }
         }
-    }
-})
-
-ref.searchInput.addEventListener('input', (e) => {
-    const val = e.path[0].value;
-    if(!val) {
-        passwordArrSearch = passwordArr;
-    }else {
-        passwordArrSearch = passwordArr.filter(el => el.name.lowerCase().includes(val.lowerCase()));
-    }
-    updatePassword();
-})
+    })
+    
+    ref.searchInput.addEventListener('input', (e) => {
+        const val = e.path[0].value;
+        if(!val) {
+            passwordArrSearch = passwordArr;
+        }else {
+            passwordArrSearch = passwordArr.filter(el => el.name.lowerCase().includes(val.lowerCase()));
+        }
+        updatePassword();
+    })
+}
 
 function updatePassword() {
     ref.passwordList.innerHTML = '';

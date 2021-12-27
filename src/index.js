@@ -4,7 +4,7 @@ const {
 } = require('electron');
 
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 
 const {
     encrypt,
@@ -29,7 +29,7 @@ const createWindow = () => {
     });
 
     mainWindow.loadFile(path.join(__dirname, './public/index.html'));
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     initServe();
 };
@@ -127,13 +127,13 @@ function initServe() {
             })
         })
 
-        let txt = ''
+        let txt = '';
 
         for (const fileElem in file) {
-            txt += `Название: ${fileElem}. Телефон или почта: ${file[fileElem].mailOrPhone}. Пароль: ${decrypt(file[fileElem].password)}. Дополнительно: ${file[fileElem].additional}.\n`
+            txt += `Название: ${fileElem}. Телефон или почта: ${file[fileElem].mailOrPhone}. Пароль: ${decrypt(file[fileElem].password)}. Дополнительно: ${file[fileElem].additional}.\n`;
         }
 
-        res.send('data:text/plain;charset=utf-8,' + encodeURIComponent(txt))
+        res.send('data:text/plain;charset=utf-8,' + encodeURIComponent(txt));
     })
 
     serve.get('/passwords/:name', async(req, res) => {
@@ -184,5 +184,14 @@ function initServe() {
             }
             res.send(passwordToArr(req.body.data));
         })
+    })
+
+    serve.get('/app/password/:password', async(req, res) => {
+        console.log(req.params.password)
+        if(req.params.password === '1234') {
+            res.send(true);
+            return;
+        }
+        res.send(false);
     })
 }
