@@ -102,11 +102,11 @@ function events() {
     })
     
     ref.searchInput.addEventListener('input', (e) => {
-        const val = e.path[0].value;
+        const val = e.path[0].value.toLowerCase;
         if(!val) {
             passwordArrSearch = passwordArr;
         }else {
-            passwordArrSearch = passwordArr.filter(el => el.name.lowerCase().includes(val.lowerCase()));
+            passwordArrSearch = passwordArr.filter(el => el.name.toLowerCase().includes(val));
         }
         updatePassword();
     })

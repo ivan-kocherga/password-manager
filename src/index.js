@@ -188,7 +188,7 @@ function initServe() {
 
     serve.get('/app/password/:password', async(req, res) => {
         console.log(req.params.password)
-        if(req.params.password === '1234') {
+        if(req.params.password === '') {
             res.send(true);
             return;
         }
