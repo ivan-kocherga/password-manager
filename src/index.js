@@ -23,13 +23,13 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 const createWindow = () => {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
-        width: 565,
+        width: 700,
         height: 700,
         autoHideMenuBar: true,
     });
 
     mainWindow.loadFile(path.join(__dirname, './public/index.html'));
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     initServe();
 };
@@ -150,7 +150,6 @@ function initServe() {
         const elem = Object.entries(file).find(([_name]) => req.params.name.replace('%20', ' ') === _name)[1];
         const {password, name} = elem;
         const decryptPassword = decrypt(password);
-
         res.send({
             name,
             passwordView: decryptPassword
@@ -187,7 +186,6 @@ function initServe() {
     })
 
     serve.get('/app/password/:password', async(req, res) => {
-        console.log(req.params.password)
         if(req.params.password === '') {
             res.send(true);
             return;

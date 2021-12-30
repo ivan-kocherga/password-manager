@@ -5,7 +5,7 @@ const ref = {
     additionalInput: document.querySelector('.input-additional'),
     importInput: document.querySelector('.import'),
     searchInput: document.querySelector('.input-search'),
-    passwordInput: document.querySelector('.login input'),
+    signInInput: document.querySelector('.login input'),
 
     passwordEl: document.querySelector('.test'),
     passwordList: document.querySelector('.password-view'),
@@ -15,7 +15,7 @@ const ref = {
     panelItems: document.querySelectorAll('.panel-elem'),
     passwordBlock: document.querySelector('.password-create'), 
     searchBlock: document.querySelector('.search'),
-    passwordBlock: document.querySelector('.login'),
+    signInBlock: document.querySelector('.login'),
 
     exportDecryptBtn: document.querySelector('.export-decrypt'),
     saveBtn: document.querySelector('.save'),
@@ -32,10 +32,10 @@ function updateData(data) {
 }
 
 ref.passworBtn.addEventListener('click', async() => {
-    const res = await axios.get(`${api}/app/password/${ref.passwordInput.value}`);
+    const res = await axios.get(`${api}/app/password/${ref.signInInput.value}`);
     if(res.data) {
-        ref.passwordBlock.classList.add('none');
-        ref.passwordInput.value = '';
+        ref.signInBlock.classList.add('none');
+        ref.signInInput.value = '';
         axios.get(`${api}/passwords`).then(res => {
             updateData(res.data);
             updatePassword();
@@ -51,7 +51,7 @@ function events() {
         const mailOrPhone = ref.mailInput.value;
         const additional = ref.additionalInput.value;
         if (name && password && mailOrPhone) {
-            const res = await axios.post(`${api}/passwords`, { name, password, mailOrPhone, additional });
+            const res = await axios.post(`${api}/passwords`, { name: name.trim(), password, mailOrPhone, additional });
             updateData(res.data);
             updatePassword();
             ref.nameInput.value = '';
@@ -100,9 +100,9 @@ function events() {
             }
         }
     })
-    
+
     ref.searchInput.addEventListener('input', (e) => {
-        const val = e.path[0].value.toLowerCase;
+        const val = e.path[0].value.toLowerCase();
         if(!val) {
             passwordArrSearch = passwordArr;
         }else {
